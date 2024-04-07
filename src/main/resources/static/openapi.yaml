@@ -1,0 +1,110 @@
+openapi: 3.0.1
+info:
+  title: Swagger Prices Microservice
+  description: >-
+    This microservice manage the prices issues.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: carlos.lencina.q@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+  - url: http{protocol}://{environment}/v1
+    variables:
+      protocol:
+        default: ""
+        enum:
+          - ""
+          - s
+      environment:
+        default: localhost:8080
+        enum:
+          - localhost:8080
+          - prices
+          - prices-tst
+          - prices-dev
+tags:
+  - name: Prices API
+    description: All about prices management
+paths:
+  /prices:
+    get:
+      tags:
+        - Prices
+      description: Find information on the applicable price of a product based on the group's brand and an application date
+      operationId: findProductPriceByBrandIdAndDate
+      parameters:
+        - name: brandId
+          in: query
+          description: Brand ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 1
+        - name: productId
+          in: query
+          description: Product ID
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 35455
+        - name: date
+          in: query
+          description: Date of application of the product's price
+          required: true
+          schema:
+            type: string
+            example: "2020-06-14-10.00.00"
+            pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}.[0-9]{2}.[0-9]{2}"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PriceDto"
+        400:
+          description: Invalid status value
+          content: { }
+components:
+  schemas:
+    PriceDto:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+          example: 35455
+        brandId:
+          type: integer
+          format: int64
+          example: 1
+        priceList:
+          type: integer
+          format: int64
+          example: 1
+        startDate:
+          type: string
+          description: First date-time of application of the price
+          example: "2019-06-14-00.00.00"
+          pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}.[0-9]{2}.[0-9]{2}"
+        endDate:
+          type: string
+          description: Final date-time of application of the price
+          example: "2024-06-14-00.00.00"
+          pattern: "[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{2}.[0-9]{2}.[0-9]{2}"
+        price:
+          type: number
+          format: float
+          multipleOf: 0.2
+          example: 44.90
+        currency:
+          type: string
+          maxLength: 3
+          minLength: 3
+          default: EUR
+          example: EUR
