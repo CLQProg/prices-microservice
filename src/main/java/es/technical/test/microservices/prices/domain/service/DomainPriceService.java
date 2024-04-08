@@ -4,9 +4,6 @@ import es.technical.test.microservices.prices.domain.Price;
 import es.technical.test.microservices.prices.domain.repository.PriceRepository;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.Optional;
-import java.util.Set;
 
 /**
  * Price Service.
@@ -29,9 +26,7 @@ public class DomainPriceService implements PriceService {
      */
     @Override
     public Price findProductPriceByBrandIdAndDate(Long brandId, Long productId, LocalDateTime date) {
-        Set<Price> prices = priceRepository.findProductPriceByBrandIdAndDate(brandId, productId, date);
-        Optional<Price> priceMaxPriority = prices.stream().max(Comparator.comparingLong(Price::getPriority));
-        return priceMaxPriority.orElse(null);
+        return priceRepository.findProductPriceByBrandIdAndDate(brandId, productId, date);
     }
 
 }

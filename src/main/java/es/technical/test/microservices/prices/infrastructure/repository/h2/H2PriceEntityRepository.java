@@ -3,16 +3,11 @@ package es.technical.test.microservices.prices.infrastructure.repository.h2;
 
 import es.technical.test.microservices.prices.domain.Price;
 import es.technical.test.microservices.prices.domain.repository.PriceRepository;
-import es.technical.test.microservices.prices.infrastructure.repository.h2.entity.PriceEntity;
 import es.technical.test.microservices.prices.infrastructure.repository.h2.mapper.PriceH2Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Price entity repository.
@@ -35,21 +30,13 @@ public class H2PriceEntityRepository implements PriceRepository {
      * @param brandId   Brand ID (required)
      * @param productId Product ID (required)
      * @param date      Date of application of the product&#39;s price (required)
-     * @return {@link Set} of {@link Price}s.
+     * @return {@link Price}.
      */
     @Override
-    public Set<Price> findProductPriceByBrandIdAndDate(Long brandId, Long productId, LocalDateTime date) {
-
-        Specification<PriceEntity> spec = Specification
-                .where(priceRepository.hasProductWithId(productId))
-                .and(priceRepository.hasBrandWithId(brandId))
-                .and(priceRepository.hasEndDateGreaterThan(date))
-                .and(priceRepository.hasStartDateLessThan(date));
-        List<PriceEntity> priceEntities = priceRepository.findAll(spec);
-
-        return priceEntities.stream()
+    public Price findProductPriceByBrandIdAndDate(Long brandId, Long productId, LocalDateTime date) {
+        return priceRepository.findByBrandAndProductAndDateWithMaxPriority(brandId, productId, date)
                 .map(priceH2Mapper::toDomainEntity)
-                .collect(Collectors.toSet());
+                .orElse(null);
     }
 
 }
