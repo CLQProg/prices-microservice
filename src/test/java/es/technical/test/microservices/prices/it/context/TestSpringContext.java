@@ -11,7 +11,7 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, classes = {
     PricesApplication.class})
 @ActiveProfiles("test")
-public class SpringContextTest {
+public class TestSpringContext {
 
   @Autowired
   private CucumberContext context;

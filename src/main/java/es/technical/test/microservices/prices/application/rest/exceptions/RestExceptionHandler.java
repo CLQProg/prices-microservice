@@ -1,6 +1,6 @@
-package es.technical.test.microservices.prices.infrastructure.configuration;
+package es.technical.test.microservices.prices.application.rest.exceptions;
 
-import es.technical.test.microservices.prices.application.rest.exceptions.GenericErrorDto;
+import es.technical.test.microservices.prices.domain.exceptions.CustomError;
 import es.technical.test.microservices.prices.domain.exceptions.GenericException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -32,8 +32,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleGenericException(GenericException ex, WebRequest request) {
         final HttpStatus status = ex.getHttpStatus();
         log.info(ex.getMessage(), ex);
-        GenericErrorDto genericException = new GenericErrorDto(ex.getCode(), ex.getInformation());
-        return handleExceptionInternal(ex, genericException, new HttpHeaders(), status, request);
+        CustomError customError = new CustomError(ex.getCode(), ex.getInformation());
+        return handleExceptionInternal(ex, customError, new HttpHeaders(), status, request);
     }
 
 }
